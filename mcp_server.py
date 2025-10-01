@@ -47,7 +47,24 @@ def edit_document(
     return f"Successfully updated document {doc_id}"
 
 # TODO: Write a resource to return all doc id's
+@mcp.tool(
+    name="list_documents",
+    description="List all available document ids."
+)
+def list_documents():
+    return list(docs.keys())
+
 # TODO: Write a resource to return the contents of a particular doc
+@mcp.tool(
+    name="get_document",
+    description="Get the contents of a document by its ID."
+)
+def get_document(doc_id: str = Field(description="Id of the document to retrieve")):
+    if doc_id not in docs:
+        raise ValueError(f"Doc with id {doc_id} not found")
+
+    return docs[doc_id]
+
 # TODO: Write a prompt to rewrite a doc in markdown format
 # TODO: Write a prompt to summarize a doc
 

@@ -2,9 +2,11 @@ import sys
 import asyncio
 from typing import Optional, Any
 from contextlib import AsyncExitStack
+from urllib import response
 from mcp import ClientSession, types
 from mcp.client.streamable_http import streamablehttp_client
-
+import json
+from pydantic import AnyUrl
 
 class MCPClient:
     def __init__(
@@ -54,8 +56,17 @@ class MCPClient:
         return []
 
     async def read_resource(self, uri: str) -> Any:
-        # TODO: Read a resource, parse the contents and return it
-        return []
+        response = await self.session().read_resource(AnyUrl(uri))
+        result = response
+        if isinstance(result, types.TextResourceContents):
+            if result.mimeType == "application/json":
+                try:
+                    return json.loads(result.text)
+                except json.JSONDecodeError:
+                    return result.text
+            return json.loads(result.text)
+        return result
+    
 
     async def cleanup(self):
         await self._exit_stack.aclose()
@@ -111,6 +122,8 @@ async def main():
             )
         except Exception as e:
             print(f"\n\nSuccessfully caught expected error: {e}")
+
+        
 
 
 if __name__ == "__main__":

@@ -47,7 +47,7 @@ def edit_document(
     return f"Successfully updated document {doc_id}"
 
 # TODO: Write a resource to return all doc id's
-@mcp.tool(
+@mcp.resource(uri="docs://documents", mime_type="application/json",
     name="list_documents",
     description="List all available document ids."
 )
@@ -55,7 +55,7 @@ def list_documents():
     return list(docs.keys())
 
 # TODO: Write a resource to return the contents of a particular doc
-@mcp.tool(
+@mcp.resource(uri="docs://documents/{doc_id}",mime_type="application/json",
     name="get_document",
     description="Get the contents of a document by its ID."
 )

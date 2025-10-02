@@ -52,6 +52,7 @@ def edit_document(
     description="List all available document ids."
 )
 def list_documents():
+    print("Listing documents")
     return list(docs.keys())
 
 # TODO: Write a resource to return the contents of a particular doc
@@ -63,10 +64,33 @@ def get_document(doc_id: str = Field(description="Id of the document to retrieve
     if doc_id not in docs:
         raise ValueError(f"Doc with id {doc_id} not found")
 
+    print(f"Getting document {doc_id}")
     return docs[doc_id]
 
-# TODO: Write a prompt to rewrite a doc in markdown format
 # TODO: Write a prompt to summarize a doc
+@mcp.prompt(
+    name="summarize_doc",
+    description="Summarize the contents of a document in markdown format."
+)
+def summarize_doc(doc_id: str = Field(description="Id of the document to summarize")):
+    if doc_id not in docs:
+        raise ValueError(f"Doc with id {doc_id} not found")
 
+    content = docs[doc_id]
+    summary = f"# Summary of {doc_id}\n\n{content}...\n\n*This is a simulated summary.*"
+    return summary
+
+# TODO: Write a prompt to rewrite a doc in markdown format
+@mcp.prompt(
+    name="rewrite_doc",
+    description="Rewrite the contents of a document in markdown format."
+)
+def rewrite_doc(doc_id: str = Field(description="Id of the document to rewrite")):
+    if doc_id not in docs:
+        raise ValueError(f"Doc with id {doc_id} not found")
+
+    content = docs[doc_id]
+    rewritten = f"# Rewrite {doc_id}\n\n{content}\n\n* In markdown format. Add all relevant details.*"
+    return rewritten
 
 mcp_app = mcp.streamable_http_app()

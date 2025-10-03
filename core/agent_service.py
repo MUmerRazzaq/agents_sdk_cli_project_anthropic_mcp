@@ -45,7 +45,7 @@ class AgentService:
 
         self.agent = Agent(
             name="Assistant",
-            instructions="You are a helpful AI assistant that can use tools to answer questions.",
+            instructions="You are a helpful assistant. Your task is to assist the user with their requests. Analyze the user's input and brake in to step to identify the tools that should use to complete the task ",
             model=OpenAIChatCompletionsModel(
                 model=model,
                 openai_client=self.client
